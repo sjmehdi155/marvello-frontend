@@ -6,12 +6,13 @@ import { useState, useEffect } from "react";
 import { productService } from "@/services/product.service";
 import { useSearchParams } from "next/navigation";
 import Loader from "@/components/Loader";
+import { Suspense } from "react";
 
 const categories = ["All", "Electronics", "Clothing", "Accessories", "Home", "Beauty"];
 const priceRanges = ["All", "Under $50", "$50 to $100", "$100 to $200", "Over $200"];
 const sortOptions = ["Featured", "Price: Low to High", "Price: High to Low", "Newest"];
 
-export default function ShopPage() {
+function ShopContent() {
     const searchParams = useSearchParams();
     const initialCategory = searchParams.get("category") || "All";
 
@@ -188,5 +189,17 @@ export default function ShopPage() {
                 </main>
             </div>
         </div>
+    );
+}
+
+export default function ShopPage() {
+    return (
+        <Suspense fallback={
+            <div className="container mx-auto px-4 py-20 flex justify-center">
+                <Loader />
+            </div>
+        }>
+            <ShopContent />
+        </Suspense>
     );
 }
